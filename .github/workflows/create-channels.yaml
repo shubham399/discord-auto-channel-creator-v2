@@ -23,9 +23,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
+    - run: yarn install
     - name: "Create Channels"
-      run: npm run start --if-present --unhandled-rejections=strict
+      run: yarn run start --if-present --unhandled-rejections=strict
       env:
           GUILD_ID: ${{secrets.GUILD_ID}}
           BOT_TOKEN: ${{secrets.BOT_TOKEN}}
