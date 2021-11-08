@@ -2,7 +2,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 import { getCategory, getChannelsInCategory, createChannel, deleteChannel, updateChannel } from "./helper/discord";
-import { getBoxes } from "./helper/htb";
+import { getBoxes, getStartingPointBox } from "./helper/htb";
 
 
 const createChannelsWithHint = async (category: any, name: string) => {
@@ -35,8 +35,11 @@ async function main() {
         let archivePermission = archiveCategory.permission_overwrites
         archivingChannel.map(channel => archiveChannels(archivePermission, channel, archiveCategory.id))
         boxNames.map((name: string) => createChannelsWithHint(category, name))
-        console.log(boxNames)
-        console.log(notPresentBox)
+        // // Create StartingPoint
+        // let startingpointCategory = await getCategory('StartingPoint')
+        // let startingpoint = await getStartingPointBox();
+        // let startingpointNames = startingpoint.map((x: any) => x.name.toLowerCase())
+        // startingpointNames.map((name: string) => createChannel(startingpointCategory, name))
     }
     catch (e: any) {
         console.error(e.message)
