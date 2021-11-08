@@ -109,4 +109,22 @@ const deleteChannel = async (channelId: string) => {
     }
 }
 
-export { getCategory, getChannelsInCategory, createChannel, deleteChannel }
+const updateChannel = async (channelId: string, parentId:string, permission = null) => {
+    try {
+        let url = `${discordBase}/channels/${channelId}`
+        let data = {
+            "parent_id": parentId,
+            "permission_overwrites": permission
+        }
+        let headers = Object.assign(discordAuth, jsonContent)
+        let response = await axios.patch(url, JSON.stringify(data), {
+            headers
+        })
+        return response.data
+    }
+    catch (e: any) {
+        console.error("Update Channel Error", e.message, e.response.data)
+    }
+}
+
+export { getCategory, getChannelsInCategory, createChannel, deleteChannel, updateChannel}
