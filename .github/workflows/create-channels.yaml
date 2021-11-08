@@ -1,0 +1,32 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Create New Box Channels
+
+on:
+  schedule:
+    # Runs every hour
+    - cron: '2 20 * * SAT'
+  workflow_dispatch:
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm ci
+    - name: "Create Channels"
+      run: npm run start --if-present --unhandled-rejections=strict
+      env:
+          GUILD_ID: ${{secrets.GUILD_ID}}
+          BOT_TOKEN: ${{secrets.BOT_TOKEN}}
+          HTB_TOKEN: ${{secrets.HTB_TOKEN}}
