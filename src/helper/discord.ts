@@ -69,7 +69,7 @@ const channelExist = async (name: string, parentId: string) => {
     }
 }
 
-const createChannel = async (name: string, parentId: string) => {
+const createChannel = async (name: string, parentId: string, position: number) => {
     try {
         name = name.replace(/\s/g, "-").toLowerCase();
         let isExist = await channelExist(name, parentId)
@@ -79,7 +79,8 @@ const createChannel = async (name: string, parentId: string) => {
                 "name": name,
                 "type": 0,
                 "parent_id": parentId,
-                "lockPermissions": true
+                "lockPermissions": true,
+                "position": position
             }
             let headers = Object.assign(discordAuth, jsonContent)
             let response = await axios.post(url, JSON.stringify(data), {
@@ -109,7 +110,7 @@ const deleteChannel = async (channelId: string) => {
     }
 }
 
-const updateChannel = async (channelId: string, parentId:string, permission = null) => {
+const updateChannel = async (channelId: string, parentId: string, permission = null) => {
     try {
         let url = `${discordBase}/channels/${channelId}`
         let data = {
@@ -127,4 +128,4 @@ const updateChannel = async (channelId: string, parentId:string, permission = nu
     }
 }
 
-export { getCategory, getChannelsInCategory, createChannel, deleteChannel, updateChannel}
+export { getCategory, getChannelsInCategory, createChannel, deleteChannel, updateChannel }

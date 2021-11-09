@@ -5,10 +5,10 @@ import { getCategory, getChannelsInCategory, createChannel, deleteChannel, updat
 import { getBoxes, getStartingPointBox } from "./helper/htb";
 
 
-const createChannelsWithHint = async (category: any, name: string) => {
-    let hintChannel = await createChannel(`${name}-hints`, category.id)
+const createChannelsWithHint = async (category: any, name: string, index: number) => {
+    let hintChannel = await createChannel(`${name}-hints`, category.id, index)
     console.log("Channel Created:", hintChannel.name);
-    let discussionChannel = await createChannel(`${name}-discussion`, category.id)
+    let discussionChannel = await createChannel(`${name}-discussion`, category.id, index + 1)
     console.log("Channel Created:", discussionChannel.name);
 }
 const archiveChannels = async (permission: any, channel: any, parentId: string) => {
@@ -21,6 +21,7 @@ async function main() {
         let boxes = await getBoxes();
         let category = await getCategory("box");
         let channels = await getChannelsInCategory(category.id);
+        let requestPosition = channels.find((x: any) => x.name.includes("request-box"))?.position
         let channelsName = channels.map((x: any) => x.name.toLowerCase()).map((x: any) => x.split('-')[0]).filter((x: any) => x != 'request')
         //@ts-ignore
         let uniqueChannels = [...new Set([...channelsName])];
@@ -34,7 +35,7 @@ async function main() {
         let archivingChannel = notPresentBox.map(x => channels.filter((y: any) => y.name.includes(x))).flat()
         let archivePermission = archiveCategory.permission_overwrites
         archivingChannel.map(channel => archiveChannels(archivePermission, channel, archiveCategory.id))
-        boxNames.map((name: string) => createChannelsWithHint(category, name))
+        boxNames.map((name: string, index: number) => createChannelsWithHint(category, name, index + channels.length + requestPosition + 1))
         // // Create StartingPoint
         // let startingpointCategory = await getCategory('StartingPoint')
         // let startingpoint = await getStartingPointBox();
